@@ -1,7 +1,27 @@
-//create a hello world server
- const express = require('express');
-    const app = express();
-    const port = 3000;
-    app.get('/', (req, res) => res.send('Hello World!'));
-    app.listen(port, () => console.log(`Dummy Server listening on port ${port}!`));
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
 
+// Route for the root URL
+app.get('/', (req, res) => {
+  res.status(200).send('Welcome to the Dummy Server!');
+});
+
+// Route for a "hello" endpoint
+app.get('/hello', (req, res) => {
+  res.status(200).send('Hello, there! This is a friendly greeting from the server.');
+});
+
+// Route for a "about" endpoint
+app.get('/about', (req, res) => {
+  res.status(200).json({
+    message: 'About Dummy Server',
+    description: 'This is a simple Express.js server for demonstration purposes.',
+    version: '1.0'
+  });
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
