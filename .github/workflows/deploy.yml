@@ -1,0 +1,38 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t my-node-app .
+        docker tag my-node-app:latest ${{ secrets.DOCKER_REPO_URL }}/my-node-app:latest
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push ${{ secrets.DOCKER_REPO_URL }}/my-node-app:latest
+
+    - name: SSH into EC2 instance and deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          docker pull ${{ secrets.DOCKER_REPO_URL }}/my-node-app:latest
+          docker stop my-node-app || true
+          docker rm my-node-app || true
+          docker run -d -p 3000:3000 --name my-node-app ${{ secrets.DOCKER_REPO_URL }}/my-node-app:latest
