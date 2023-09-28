@@ -30,7 +30,7 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        key: ${{ secrets.MY_EC2_SSH_KEY }}
         script: |
           docker pull ${{ secrets.DOCKER_REPO_URL }}/my-node-app:latest
           docker stop my-node-app || true
