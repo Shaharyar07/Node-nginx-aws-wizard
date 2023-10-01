@@ -40,13 +40,13 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: nodejs-server-revision2.json 
+          task-definition: dummy-server-revision1.json 
           container-name: dummy-server
           image: ${{ steps.build-image.outputs.image }}    
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: dummy-service
+          service: dummy-service1
           cluster: DevCluster
           wait-for-service-stability: true    
