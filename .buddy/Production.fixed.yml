@@ -12,5 +12,4 @@
     execute_commands:
     - "# yarn install"
     - "npm install"
-    - "node index.js"
     shell: "BASH"
